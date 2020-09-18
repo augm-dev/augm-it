@@ -1,7 +1,7 @@
 # Under active development. Come back soon!
 
 <div align="center">
-  <img src="https://github.com/augm-dev/augm-it/raw/master/augm-it.png" alt="augm-it" width="200" />
+  <img src="https://github.com/augm-dev/augm-it/raw/master/augm.png" alt="augm logo" width="120" />
 </div>
 
 <h1 align="center">augm-it</h1>
