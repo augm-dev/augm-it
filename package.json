@@ -1,0 +1,35 @@
+{
+  "version": "0.0.1",
+  "name": "augmit",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/augm-dev/augmit.git"
+  },
+  "description": "Automatic client-side saturation",
+  "unpkg": "dist/index.min.js",
+  "module": "dist/index.mjs",
+  "main": "dist/index.js",
+  "license": "ISC",
+  "author": {
+    "name": "Marshall Brandt",
+    "email": "hey@m4r.sh",
+    "url": "https://m4r.sh"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">= 10"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "8.1.0",
+    "rollup": "2.21.0",
+    "rollup-plugin-terser": "6.1.0"
+  },
+  "dependencies": {
+    "wicked-elements": "^3.1.1"
+  }
+}
