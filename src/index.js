@@ -43,10 +43,10 @@ export default (path, options = {}) => {
   const observer = new MutationObserver(load);
   observer.observe(container, {subtree: true, childList: true});
   let upgrade = (target = container) => upgrade(target);
-  let augmit = upgrade
-  augmit.upgrade = upgrade
   augmit.disconnect = function(){
     observer.disconnect()
   }
+  let augmit = upgrade
+  augmit.upgrade = upgrade
   return augmit;
 };
