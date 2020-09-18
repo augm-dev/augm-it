@@ -1,9 +1,10 @@
+# Under active development. Come back soon!
+
 <div align="center">
-  <img src="https://github.com/augm-dev/augm-it/raw/master/augm-it.png" alt="augm-it" width="100" />
+  <img src="https://github.com/augm-dev/augm-it/raw/master/augm-it.png" alt="augm-it" width="200" />
 </div>
 
-<h1 align="center">augm-it (WIP)</h1>
-Under active development, come back soon!
+<h1 align="center">augm-it</h1>
 <div align="center">
   <a href="https://npmjs.org/package/augm-it">
     <img src="https://badgen.now.sh/npm/v/augm-it" alt="version" />
