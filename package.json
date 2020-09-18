@@ -1,9 +1,9 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.2",
   "name": "augm-it",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/augm-dev/augmit.git"
+    "url": "git+https://github.com/augm-dev/augm-it.git"
   },
   "description": "Automatic client-side saturation",
   "unpkg": "dist/index.min.js",
