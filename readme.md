@@ -1,7 +1,7 @@
 # Under active development. Come back soon!
 
 <div align="center">
-  <img src="https://github.com/augm-dev/augm-it/raw/master/augm.png" alt="augm logo" width="120" />
+  <img src="https://github.com/augm-dev/augm-it/raw/master/augm.png" alt="augm logo" width="60" />
 </div>
 
 <h1 align="center">augm-it</h1>
@@ -46,6 +46,10 @@ saturation.disconnect()
 Loading component saturation asynchronously allows for minimal FMP (first meaningful paint). The size of this library is tiny, and if your runtime is also small (or non-existent), TTI (time-to-interactive) will be very fast. 
 
 By not bundling components, each page only loads what it needs, and you can easily have a library of 100+ potential components without bloating your site (huge win).
+
+This approach takes advantage of:
+- HTTP/2 parallel download speed [caniuse](https://caniuse.com/http2)
+- Asynchronous import [caniuse](https://caniuse.com/es6-module-dynamic-import) [polyfill](https://github.com/GoogleChromeLabs/dynamic-import-polyfill)
 
 ## Acknowledgements
 
