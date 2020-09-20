@@ -205,10 +205,7 @@ const loaded = new Set;
 var index = (path, options = {}) => {
   const ext = options.extension || '.js';
   const prefix = options.prefix || 'it-';
-  const runtime = options.runtime || {
-    html() { return render(this.element, html.apply(null, arguments)) },
-    svg() { return render(this.element, svg.apply(null, arguments)) }
-  };
+  const runtime = options.runtime || {};
   const container = options.container || document;
   const load = mutations => {
     for (let i = 0, {length} = mutations; i < length; i++) {
