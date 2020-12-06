@@ -1,7 +1,7 @@
 <h1 align="center">:construction: Under active development. Come back soon! :construction:</h1>
 
 <div align="center">
-  <img src="https://github.com/augm-dev/augm-it/raw/main/meta/augm.png" alt="augm logo" width="100" />
+  <img src="https://github.com/augm-dev/augm-it/raw/overhaul/meta/augm.png" alt="augm logo" width="100" />
 </div>
 
 <h1 align="center">augm-it</h1>
