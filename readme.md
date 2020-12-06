@@ -1,7 +1,5 @@
-<h1 align="center">:construction: Under active development. Come back soon! :construction:</h1>
-
 <div align="center">
-  <img src="https://github.com/augm-dev/augm-it/raw/overhaul/meta/augm.png" alt="augm logo" width="100" />
+  <img src="https://github.com/augm-dev/augm-it/raw/overhaul/meta/augm.png" alt="augm logo" width="60" />
 </div>
 
 <h1 align="center">augm-it</h1>
@@ -15,6 +13,8 @@
     <img src="https://img.badgesize.io/augm-dev/augm-it/master/min.js?compression=brotli" alt="install size" />
   </a>
 </div>
+
+<h1 align="center">:construction: Under active development. Come back soon! :construction:</h1>
 
 # Features
 
