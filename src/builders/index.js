@@ -5,40 +5,39 @@ import { singleNode } from './single/node'
 import { singleRender } from './single/render'
 import { singleStyle } from './single/style'
 import { singleHandler } from './single/handler'
-import { singleSaturation } from './single/saturation'
+// import { singleSaturation } from './single/saturation'
 
 export async function single(p, info){
   let { warn, error, success } = this
+  let id = info.id.replace('.js', '')
   let results = await Promise.all(
     [
       // css file
       singleStyle({
         minify: true,
-        output: `${id}/style.css`
+        destination: `${id}/style.css`
       }),
       // export default html.node
       singleNode({
-        output: `${id}/node.js`
+        destination: `${id}/node.js`
       }),
       // export default html
       singleRender({
-        output: `${id}/render.js`
+        destination: `${id}/render.js`
       }),
       // export default handler
       singleHandler({
-        output: `${id}/handler.js`
+        destination: `${id}/handler.js`
       }),
       // wicked + define(it,handler)
-      singleSaturation({
-        output: `${id}/saturation.js`
-      }),
+      // singleSaturation({
+      //   destination: `${id}/saturation.js`
+      // }),
       // wicked + define(it, handler) + export default html.node
-      singleStandalone({
-        output: `${id}/standalone.js`
-      })
-    ].map(builder => {
-      builder.call({ warn, error, success}, p, info)
-    })
+      // singleStandalone({
+      //   destination: `${id}/standalone.js`
+      // })
+    ].map(builder => builder.call({ warn, error, success}, p, info))
   )
   // merge result objects together
   return results.reduce((obj, val) => ({...obj, ...val}), {})
@@ -46,17 +45,17 @@ export async function single(p, info){
 
 export async function aggregate(targets, changed){
   let { warn, error, success } = this
-  let results = Promise.all([
-    aggregateStyles({
-      minify: true,
-      output: 'saturation.js'
-    }),
-    aggregateSaturation({
-      output: 'styles.css'
-    })
-  ].map(builder => {
-    builder.call({ warn, error, success}, targets, changed)
-  }))
+  let results = await Promise.all(
+    [
+      aggregateStyles({
+        minify: true,
+        destination: 'styles.css'
+      }),
+      aggregateSaturation({
+        destination: 'saturation.js'
+      })
+    ].map(builder =>  builder.call({ warn, error, success}, targets, changed))
+  )
 
   return results.reduce((obj, val) => ({...obj, ...val}), {})
 }

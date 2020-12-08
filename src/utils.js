@@ -43,6 +43,34 @@ export function rollup(options){
   })
 }
 
+function it_import(id,dep){
+  id = path.normalize(id)
+  dep = path.normalize(dep)
+  let { length } = path.join(id,dep).split('/').filter(s=>s.length)
+  return length > 1
+}
+
+export const component_render_import = (id) => ({
+  async resolveId(dependency){
+    if(dependency.startsWith('.')){
+      // if this relative import is still inside the component directory
+      // aka - if this import is also a component
+      // import the /render.js file
+      if(it_import(id, dependency)){
+        // remove .js at end if it exists
+        if(dependency.endsWith('.js')){
+          dependency = dependency.substring(0,dependency.length-3)
+        }
+        dependency = dependency + '/render.js'
+      }
+      return {
+        id: dependency,
+        external: true
+      }
+    }
+  }
+})
+
 export function bytesize(content){
   return formatBytes(brotliSize.sync(content))
 }

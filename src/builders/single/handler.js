@@ -1,19 +1,13 @@
 const virtual = require('@rollup/plugin-virtual');
 const rollupStream = require('@rollup/stream');
 var { skypin } = require('rollup-plugin-skypin');
-const { pathDepth, rollup, readFile, component_render_import } = require('../../utils');
+const { pathDepth, rollup, readFile } = require('../../utils');
 var path = require('path')
 const { minify } = require('terser')
 
 let runtime = void 0
 
-/**
- * Ok. so. the length of the array will only be = 1 if the import is outside of the "it" source directory
- * This func will return true if the relative import is in the comopnent directory, and false if it's outside
- */
-
-
-let rollup_options = (component, runtime, id) => {
+let rollup_options = (component, runtime) => {
   return {
     input: 'virt',
     output: { format: 'esm' },
@@ -25,15 +19,10 @@ let rollup_options = (component, runtime, id) => {
     },
     plugins: [
       virtual({
-        virt: `
-          import it from 'it'
-          import { html } from 'augm-it'
-          export default html.node\`\${it}\`
-        `,
+        virt: `export {handler as default} from 'it'`,
         it: component,
         'augm-it': runtime
       }),
-      component_render_import(id),
       skypin({  relative_external: true })
     ]
   }
@@ -41,15 +30,15 @@ let rollup_options = (component, runtime, id) => {
 
 let default_options = {}
 
-export function singleNode(options={}){
+export function singleHandler(options={}){
   let { destination } = { ...default_options, ...options }
-  return async function(p, { contents, exports, id }){
+  return async function(p, { contents, exports }){
     if(!runtime){
       runtime = await readFile(path.join(__dirname, '../../runtimes/runtime.js'), 'utf8')
     }
     let code = void 0
-    if(exports.includes("default")){
-      let source = await rollup(rollup_options(contents.toString('utf8'), runtime, id))
+    if(exports.includes("handler")){
+      let source = await rollup(rollup_options(contents.toString('utf8'), runtime))
       code = (await minify(source)).code
     }
     return { [destination]: code }

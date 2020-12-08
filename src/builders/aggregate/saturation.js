@@ -8,33 +8,25 @@ const { minify } = require('terser')
 let runtime_template
 
 let terser_options = {}
+let default_options = {}
 
 export function aggregateSaturation(options={}){
+  let { minify, destination } = { ...default_options, ...options }
   return async function(targets){
     // Load template file
     let runtime_start = Date.now()
     if(!runtime_template){
-      runtime_template = await readFile(path.join(__dirname, '../../runtimes/saturation.js'), 'utf8')
-      runtime_template = await rollup({
-        input: 'x',
-        output: { format: 'esm' },
-        plugins: [
-          virtual({ x: runtime_template }),
-          nodeResolve()
-        ]
-      })
-      runtime_template = (await minify(runtime_template)).code
+      runtime_template = await readFile(path.join(__dirname, '../../runtimes/saturation-cdn.min.js'), 'utf8')
     }
     let source = runtime_template.replace('__handlers__', generateHandlers(targets))
-    let { code } = await minify(source)
-    return source
+    return {[destination]: source}
   }
 }
 
 function generateHandlers(targets){
   let handlers = {}
   Object.keys(targets).forEach(p => {
-    let { handler, it} = require(p)
+    let { handler, it} = require(path.join(process.cwd(),p))
     if(handler && it){
       handlers[it] = '.' + targets[p].id.replace('.js','/handler.js');
     }
