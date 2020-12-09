@@ -6,6 +6,12 @@ function raw(str){
   return template.content;
 }
 let css=x=>x
+const register = (name) => new Proxy({}, {
+  get(_,prop){
+    if(prop === 'toString' || prop===Symbol.toPrimitive){ return ()=>name }
+    return name+'__'+prop
+  }
+});
 // // from https://github.com/WebReflection/plain-tag/blob/master/esm/index.js
 // function plain(t) {
 //   for (var s = t[0], i = 1, l = arguments.length; i < l; i++)
@@ -13,4 +19,4 @@ let css=x=>x
 //   return s;
 // };
 // let css = plain.bind(null)
-export { css, html, svg, raw }
+export { css, html, svg, raw, register }

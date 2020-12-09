@@ -1,4 +1,4 @@
-export { html, svg } from 'https://cdn.skypack.dev/pin/uhtml@v2.1.4-wM6ggHQjDElP2aFFipzg/min/uhtml.js';
+export { html, svg } from 'https://cdn.skypack.dev/pin/uhtml@v2.1.4-HrJRPrL0JyWkz67wcXkc/min/uhtml.js';
 
 function raw(str){
   str = Array.isArray(str) ? plain.apply(null, arguments) : str;
@@ -7,5 +7,11 @@ function raw(str){
   return template.content;
 }
 let css=x=>x;
+const register = (name) => new Proxy({}, {
+  get(_,prop){
+    if(prop === 'toString' || prop===Symbol.toPrimitive){ return ()=>name }
+    return name+'__'+prop
+  }
+});
 
-export { css, raw };
+export { css, raw, register };

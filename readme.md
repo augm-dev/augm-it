@@ -37,9 +37,7 @@
 
 # About
 
-`augm-it` is a developer tool to write succint, simple, and performant components for the web. Think of it as the "glue" between `uhtml`, `wicked-elements`, `utag`, and `esbuild`.
-
-Eventually, [augm.it](https://augm.it) will be an open-source component registry that can host components with code available on GitHub.
+`augm-it` is a developer tool to write succint, simple, and performant components for the web. Think of it as the "glue" between `uhtml`, `wicked-elements`, `uline`, and `esbuild`.
 
 ## Usage
 

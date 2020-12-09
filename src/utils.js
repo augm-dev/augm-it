@@ -72,6 +72,10 @@ export const component_render_import = (id) => ({
 })
 
 export function bytesize(content){
+  return formatBytes(Buffer.byteLength(content))
+}
+
+export function brotli(content){
   return formatBytes(brotliSize.sync(content))
 }
 

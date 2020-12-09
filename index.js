@@ -12,4 +12,11 @@ async function build(source="it",destination="public/it"){
   return await b.build()
 }
 
-module.exports = {watch, build, html, css, raw, svg}
+const register = (name) => new Proxy({}, {
+  get(_,prop){
+    if(prop === 'toString' || prop===Symbol.toPrimitive){ return ()=>name }
+    return name+'__'+prop
+  }
+});
+
+module.exports = {watch, build, html, css, raw, svg, register}

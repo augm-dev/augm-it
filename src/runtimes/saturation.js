@@ -61,7 +61,7 @@ var QSAO = options => {
             options.handle(element, connected, q);
           });
         }
-        loop(element.querySelectorAll(query), connected, query, set);
+        loop(querySelectorAll(element), connected, query, set);
       }
     }
   };
@@ -73,12 +73,13 @@ var QSAO = options => {
   const parse = (elements, connected = true) => {
     loop(elements, connected, options.query);
   };
+  const querySelectorAll = root => query.length ?
+                            root.querySelectorAll(query) : query;
   const observer = new MutationObserver$1(callback);
   const root = options.root || document$1;
   const {query} = options;
   observer.observe(root, {childList: true, subtree: true});
-  if (query.length)
-    parse(root.querySelectorAll(query));
+  parse(querySelectorAll(root));
   return {drop, flush, observer, parse};
 };
 
