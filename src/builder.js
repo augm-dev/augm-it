@@ -1,54 +1,25 @@
 require = require("esm")(module)
 var path = require('path')
 var jeye = require('jeye')
-const { writeFile, readFile, bytesize, brotli } = require('./utils')
+const { writeFile, readFile, bytesize, brotli, parallelBuilders } = require('./utils')
 var kleur = require('kleur')
 const { bold, dim, green, cyan, blue, underline, yellow } = kleur
-const { single, aggregate } = require('./builders/index.js')
-
-function print(message, color="blue"){
-  if(!this.silent){
-    console.log(`${kleur[color](`လ  ${bold("it")}`)} ${dim(':')} ${message}`)
-  }
-}
-
-let printer = {
-  warn(message){
-    print(message, "yellow")
-    // console.log(yellow("║"))
-    // console.log(`${yellow("╚═▷")}  ${message}`)
-  },
-  error(message, e){
-    print(message, "red")
-    console.log(yellow(e))
-  },
-  success(message){
-    print(message, "green")
-  },
-  info(message){
-    print(message, "blue")
-  },
-  benchmarks(arr){
-    if(!this.silent){
-      if(arr.length){
-        console.log(dim("║"))
-      }
-      arr.forEach(([label, ...facts], i) => {
-        console.log(`${i === arr.length - 1 ? dim("╚══") : dim("╟══")} ${label} ${dim("═▷")}  ${facts.join(dim(' -- '))}`)
-      });
-    }
-  }
-}
+const { aggregateSaturation, aggregateStyles, singleNode, singleRender, singleStyle, singleHandler } = require('./builders/index.js')
+const {printer} = require('./printer.js');
 
 
 let jeye_options = { ignore: /(^|[\/\\])[\._]./, cache: require.cache }
 
+let default_options = { strategy: 'all' }
+
 module.exports = class Builder{
-  constructor(source, destination){
-    Object.assign(this, { source, destination})
+  constructor(source, destination, options){
+    options = { ...default_options, ...options }
+    Object.assign(this, { source, destination, options })
     this.single = this.single.bind(this)
     this.aggregate = this.aggregate.bind(this)
     this.unlink = this.unlink.bind(this)
+    this.createBuilders()
   }
 
   watch(){
@@ -57,6 +28,31 @@ module.exports = class Builder{
       .on("change", this.single)
       .on("aggregate", this.aggregate)
       .on("unlink", this.unlink)
+    /**
+     * watches.scan(this.source, { ignore: ... }) => (targets, all)
+     * watches(this.source, { ignore }).on('change', ()=>{}).on('aggregate',p=>true,()=>{})
+     */
+  }
+
+  createBuilders(){
+    this.singleBuilder = parallelBuilders.call(printer,function(p, { id, exports }){
+      let name = id.replace('.js','')
+      return {
+        [name+'/style.css']: singleStyle(),
+        [name+'/node.js']: singleNode(),
+        [name+'/render.js']: singleRender(),
+        [name+'/handler.js']: singleHandler(),
+        // [name+'/saturate.js']: singleSaturation(),
+        // [name+'/standalone.js']: singleStandalone()
+      }
+    })
+    
+    this.aggregateBuilder = parallelBuilders.call(printer, function(targets, changed){
+      return {
+        'styles.css': aggregateStyles({ minify: true }),
+        'saturation.js': aggregateSaturation()
+      }
+    })
   }
 
   async build(){
@@ -89,14 +85,14 @@ module.exports = class Builder{
 
   async single(p, info){
     this.loadStart = Date.now()
-    let output = await single.call(printer,p,info)
+    let output = await this.singleBuilder(p,info)
     this.affectedFiles+=Object.keys(output).length
     this.affectedComponents++
     this.write(output)
   }
 
   async aggregate(targets, changed, print_benchmarks=false){
-    let output = await aggregate.call(printer,targets,changed)
+    let output = await this.aggregateBuilder(targets,changed)
     await this.write(output)
     if(this.affectedComponents){
       printer.success(`Built ${this.affectedComponents} component${this.affectedComponents === 1 ? '' : 's'} in ${green(`${Date.now() - this.loadStart}ms`)}`)

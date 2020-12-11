@@ -31,7 +31,7 @@ let rollup_options = (component, runtime) => {
 let default_options = {}
 
 export function singleHandler(options={}){
-  let { destination } = { ...default_options, ...options }
+  options = { ...default_options, ...options }
   return async function(p, { contents, exports }){
     if(!runtime){
       runtime = await readFile(path.join(__dirname, '../../runtimes/runtime.js'), 'utf8')
@@ -39,8 +39,8 @@ export function singleHandler(options={}){
     let code = void 0
     if(exports.includes("handler")){
       let source = await rollup(rollup_options(contents.toString('utf8'), runtime))
-      code = (await minify(source)).code
+      code = options.minify ? (await minify(source)).code : source
     }
-    return { [destination]: code }
+    return code
   }
 }

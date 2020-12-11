@@ -7,7 +7,7 @@ let default_options = {
 }
 
 export function singleStyle(options={}){
-  let { minify, destination } = { ...default_options, ...options }
+  options = { ...default_options, ...options }
 
   return async function(p, info){
     let { error } = this
@@ -15,12 +15,12 @@ export function singleStyle(options={}){
     try{
       let m = require(path.join(process.cwd(),p))
       if(m && m.style){
-        let style = m.style.toString()
-        data = minify ? csso.minify(style).css : style
+        let style = m.style().toString()
+        data = options.minify ? csso.minify(style).css : style
       }
     } catch(e){
       error('Error generating styles', e)
     }
-    return { [destination]: data }
+    return data
   }
 }

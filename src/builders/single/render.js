@@ -32,7 +32,7 @@ let rollup_options = (component, runtime, id) => {
 let default_options = {}
 
 export function singleRender(options={}){
-  let { destination } = { ...default_options, ...options }
+  options = { ...default_options, ...options }
   return async function(p, { contents, exports, id }){
     if(!runtime){
       runtime = await readFile(path.join(__dirname, '../../runtimes/runtime.js'), 'utf8')
@@ -40,8 +40,8 @@ export function singleRender(options={}){
     let code = void 0
     if(exports.includes("default")){
       let source = await rollup(rollup_options(contents.toString('utf8'), runtime, id))
-      code = (await minify(source)).code
+      code = options.minify ? (await minify(source)).code : source
     }
-    return { [destination]: code }
+    return code
   }
 }

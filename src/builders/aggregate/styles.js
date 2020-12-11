@@ -7,7 +7,7 @@ let default_options = {
 }
 
 export function aggregateStyles(options={}){
-  let { minify, destination } = { ...default_options, ...options }
+  options = { ...default_options, ...options }
 
   return async function(targets){
     let { error, warn } = this
@@ -17,13 +17,13 @@ export function aggregateStyles(options={}){
       Object.keys(targets).forEach(p => {
         let m = require(path.join(process.cwd(),p))
         if(m && m.style){
-          styles += m.style.toString() || ""
+          styles += m.style().toString() || ""
         }
       })
-      data = minify ? csso.minify(styles).css : styles
+      data = options.minify ? csso.minify(styles).css : styles
     } catch(e){
       error('Error generating styles', e)
     }
-    return { [destination]: data }
+    return data
   }
 }

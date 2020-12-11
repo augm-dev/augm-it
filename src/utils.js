@@ -18,6 +18,23 @@ export async function writeFile(p, data){
   }
 }
 
+export function parallelBuilders(buildGenerator){
+  let self = this
+  return async function(){
+    let promiseObj = {}
+    let builds = buildGenerator.apply(self,arguments)
+    let output_paths = Object.keys(builds)
+    let data_promises = output_paths.map(p => {
+      return builds[p].apply(self,arguments)
+    })
+    let results = await Promise.all(data_promises)
+    return results.reduce((output, data, index) => {
+      output[output_paths[index]] = data
+      return output;
+    }, {})
+  }  
+}
+
 /**
  * Get relative depth to access root directory
  * /some --> ./

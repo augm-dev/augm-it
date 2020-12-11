@@ -11,15 +11,14 @@ let terser_options = {}
 let default_options = {}
 
 export function aggregateSaturation(options={}){
-  let { minify, destination } = { ...default_options, ...options }
+  options = { ...default_options, ...options }
   return async function(targets){
     // Load template file
     let runtime_start = Date.now()
     if(!runtime_template){
       runtime_template = await readFile(path.join(__dirname, '../../runtimes/saturation.min.js'), 'utf8')
     }
-    let source = runtime_template.replace('__handlers__', generateHandlers(targets))
-    return {[destination]: source}
+    return runtime_template.replace('__handlers__', generateHandlers(targets))
   }
 }
 
