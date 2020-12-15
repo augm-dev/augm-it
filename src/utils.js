@@ -5,6 +5,7 @@ var path = require('path')
 var {mkdir} = require('mk-dirs/sync')
 const rollupStream = require('@rollup/stream');
 var brotliSize = require('brotli-size');
+const virtual = require('@rollup/plugin-virtual');
 
 const writeFileAsync = promisify(fs.writeFile)
 export const readFile = promisify(fs.readFile)
@@ -48,16 +49,31 @@ export function pathDepth(id){
     : chunks.slice(1).reduce((acc) => acc + '../')
 }
 
-export function rollup(options){
+export function compile(contents, { entry, runtime, plugins }){
   return new Promise((res, rej) => {
-    const stream = rollupStream({
-      ...options,
-      onwarn: ()=>{}
-    })
-    let bundle = ''
-    stream.on('data', data=>(bundle = bundle+data))
-    stream.on('end', () => res(bundle))
-  })
+   const stream = rollupStream({
+     input: 'entry',
+     output: { format: 'esm' },
+     cache: false,
+     onwarn: ()=>{},
+     treeshake: {
+       moduleSideEffects: false,
+       propertyReadSideEffects: false,
+       unknownGlobalSideEffects: false
+     },
+     plugins: [
+       virtual({
+         entry,
+         component: contents.toString('utf8'),
+         'augm-it': runtime
+       }),
+       ...plugins
+     ]
+   })
+   let bundle = ''
+   stream.on('data', data=>(bundle = bundle+data))
+   stream.on('end', () => res(bundle))
+ })
 }
 
 function it_import(id,dep){
