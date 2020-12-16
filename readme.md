@@ -18,22 +18,17 @@
 
 # Features
 
-- Components are isomorphic (importable on both server and browser)
-  - Server: returns an HTML String for server-side rendering (using `utag`)
-  - Browser: returns a live DOM Node or fragment (using `uhtml`)
-- Write markup, styles, and handler in a single file (modeled after `svelte`)
-- Lightweight runtime (~4kb)
-- Built on `uhtml`, which is a fast alternative to virtual-dom (VDOM) architectures (`vue`,`react`,`preact`, etc...)
+- Write markup (HTML), styles (CSS), and handler (JS) in a single file (modeled after `svelte`)
+- Extremely lightweight (~1kb saturation runtime, ~3kB rendering runtime)
+- Built on [`uhtml`](https://github.com/WebReflection/uhtml), which is a [fast](https://krausest.github.io/js-framework-benchmark/current.html) tagged-template alternative to virtual-dom (VDOM) architectures (`vue`,`react`,`preact`, etc...)
 - Automatically generates
-  - SSR scripts (prioritizes saturation code & downloads render code on-demand)
+  - SSR-friendly scripts
     - Optimized saturation script for minimal TTI (time to interactive)
     - Load component render functions on demand
-    - Bundled and optimized CSS file to include <head></head>
-  - Standalone components (for easy imports on an external site)
-    - Automatic saturation of elements with matching css query (`class="it-Example"`)
-    - Importable (props)=>(HTML Fragment) for scripts that handle rendering
-    - Multiple CSS delivery methods
-- Extremely fast builds using `esbuild`
+    - Bundled and optimized CSS stylesheet
+  - Standalone components delivery methods (for easy imports from an external script / page)
+    - Automatic saturation of existing elements with matching css query (`class="SpecialButton"`)
+    - Importable `(props)=>(HTML Fragment)` standalone component for scripts that handle rendering
 
 # About
 
@@ -42,11 +37,12 @@
 ## Usage
 
 ```js
-import { html, css } from 'augm-it'
+import { html, svg, css, register } from 'augm-it'
 
-// unique id to connect the handler, styles, and render function
-export let it = 'Example'
+// unique class id to connect the handler, styles, and render function
+export let it = register('Example')
 
+// handler to be attached to elements with class=${it}
 export let handler={
   init(){
     console.log("Initialized")
@@ -56,17 +52,25 @@ export let handler={
   }
 }
 
+// on server, returns string. on browser, returns HTML fragment
 export default ({ name }) =>html`
   <div class=${it}>
-    Hello ${name}
+    <span class=${it.greeting}>
+      Hello ${name}
+    </span>
   </div>
 `
 
-
-// compiles to: .Example{color:#f00};
-export let style = css`
+// added to aggregate stylesheet for SSR
+export let style = () => css`
   .${it}{
-    color: #f00;
+    border: 1px dashed #c89;
+    padding: 1rem;
+    text-align: center;
+  }
+  .${it.greeting}{
+    font-size: 2rem;
+    color: #412;
   }
 `
 
@@ -74,6 +78,6 @@ export let style = css`
 
 ## Acknowledgements
 
-Heavily inspired by @WebReflection's libraries. `augm-it` uses `uhtml` for browser-side rendering and `wicked-elements` for attaching handlers.
+Heavily inspired by [@WebReflection's](https://github.com/WebReflection) libraries. `augm-it` uses [`uhtml`](https://github.com/WebReflection/uhtml) for browser-side rendering and [`wicked-elements`](https://github.com/WebReflection/wicked-elements) for attaching handlers.
 
-DevX inspired by `svelte`
+DevX inspired by [`svelte`](https://svelte.dev/)

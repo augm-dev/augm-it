@@ -4,7 +4,7 @@ var jeye = require('jeye')
 const { writeFile, readFile, bytesize, brotli, parallelBuilders } = require('./utils')
 var kleur = require('kleur')
 const { bold, dim, green, cyan, blue, underline, yellow } = kleur
-const { aggregateSaturation, aggregateStyles, singleNode, singleRender, singleStyle, singleHandler, singleStandalone } = require('./builders/index.js')
+const { aggregateSaturation, aggregateStyles, singleNode, singleRender, singleStyle, singleHandler, singleStandalone, singleSaturation } = require('./builders/index.js')
 const {printer} = require('./printer.js');
 
 
@@ -42,7 +42,8 @@ module.exports = class Builder{
         [name+'/node.js']: singleNode(),
         [name+'/render.js']: singleRender(),
         [name+'/handler.js']: singleHandler(),
-        [name+'/standalone.js']: singleStandalone(),
+        [name+'/standalone.js']: singleStandalone({ minify: true }),
+        [name+'/saturation.js']: singleSaturation({ minify: true }),
         // [name+'/saturate.js']: singleSaturation(),
         // [name+'/standalone.js']: singleStandalone()
       }

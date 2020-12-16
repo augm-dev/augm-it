@@ -13,32 +13,32 @@ export function singleStandalone(options={}){
   options = { ...default_options, ...options }
   return async function(p, { contents, exports, id }){
     if(!runtime){
-      runtime = await readFile(path.join(__dirname, '../../runtimes/skypin/runtime.js'), 'utf8')
+      runtime = await readFile(path.join(__dirname, '../../runtimes/skypin/standalone.js'), 'utf8')
     }
     let code = void 0
-    if(exports.includes("handler")  && exports.includes("style")){
-      let source = await compile(contents, {
-        entry: `
-          import render, {handler, it, style} from 'it';
-          import { html } from 'augm-it'
-          import { define } from 'wicked-elements'
+    exports = exports.filter(s => s!='default')
+    let importStatement = `import render, { ${exports.join(',') }} from 'component';`
+    let source = await compile(contents, {
+      entry: `
+        ${importStatement}
+        import { html } from 'augm-it';
+        ${ exports.includes('handler') && exports.includes('it') ? `
+          import { define } from 'wicked-elements';
           define('.'+it, handler);
-          if(style && typeof style === 'function'){
-            const styleTag = document.createElement('style');
-            styleTag.type = 'text/css';
-            styleTag.appendChild(document.createTextNode(style()));
-            document.head.appendChild(styleTag);
-          }
-          export default html.node\`\${render}\`;
-        `,
-        runtime: runtime,
-        plugins: [
-          component_render_import(id),
-          skypin({  relative_external: true })
-        ]
-      })
-      code = options.minify ? (await minify(source)).code : source
-    }
+        `:''}
+        ${ exports.includes('style') ? `
+          style()
+        `:''}
+        export default html.node\`\${render}\`;
+        export {${exports.join(',')}}
+      `,
+      runtime: runtime,
+      plugins: [
+        component_render_import(id),
+        skypin({  relative_external: true })
+      ]
+    })
+    code = options.minify ? (await minify(source, { module: true })).code : source
     return code
   }
 }

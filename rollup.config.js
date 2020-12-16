@@ -2,72 +2,67 @@ import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 import { skypin } from 'rollup-plugin-skypin'
 import pkg from './package.json';
+import path from 'path'
 
-let localBuilds = [
+let flavors = [
 	{
-		input: './src/templates/saturation.js',
-		output: [{
-			format: 'esm',
-			file: 'src/runtimes/saturation.js'
-		}],
+		destination: './src/runtimes/',
 		plugins: [resolve()]
-	},{
-		input: './src/templates/saturation.js',
-		output: [{
-			format: 'esm',
-			file: 'src/runtimes/saturation.min.js'
-		}],
-		plugins: [resolve(), terser()]
-	},{
-		input: './src/templates/runtime.js',
-		output: [{
-			format: 'esm',
-			file: 'src/runtimes/runtime.js'
-		}],
-		plugins: [resolve()]
-	},{
-		input: './src/templates/runtime.js',
-		output: [{
-			format: 'esm',
-			file: 'src/runtimes/runtime.min.js'
-		}],
-		plugins: [resolve(), terser()]
+	},
+	{
+		destination: './src/runtimes/skypin/',
+		plugins: [skypin()]
 	}
 ]
 
-let skypinBuilds = [
+let builds = [
 	{
-		input: './src/templates/saturation.js',
-		output: [{
-			format: 'esm',
-			file: 'src/runtimes/skypin/saturation.js'
-		}],
-		plugins: [skypin()]
-	},{
-		input: './src/templates/saturation.js',
-		output: [{
-			format: 'esm',
-			file: 'src/runtimes/skypin/saturation.min.js'
-		}],
-		plugins: [skypin(), terser()]
-	},{
-		input: './src/templates/runtime.js',
-		output: [{
-			format: 'esm',
-			file: 'src/runtimes/skypin/runtime.js'
-		}],
-		plugins: [skypin()]
-	},{
-		input: './src/templates/runtime.js',
-		output: [{
-			format: 'esm',
-			file: 'src/runtimes/skypin/runtime.min.js'
-		}],
-		plugins: [skypin(), terser()]
+		input: 'saturation.js',
+		output: 'saturation.js',
+		plugins: []
+	},
+	{
+		input: 'saturation.js',
+		output: 'saturation.min.js',
+		plugins: [terser()]
+	},
+	{
+		input: 'standalone.js',
+		output: 'standalone.js',
+		plugins: []
+	},
+	{
+		input: 'standalone.js',
+		output: 'standalone.min.js',
+		plugins: [terser()]
+	},
+	{
+		input: 'runtime.js',
+		output: 'runtime.js',
+		plugins: []
+	},
+	{
+		input: 'runtime.js',
+		output: 'runtime.min.js',
+		plugins: [terser()]
 	}
 ]
 
-export default [
-	...localBuilds,
-	...skypinBuilds
-]
+let results = flavors.reduce((total, flavor) => {
+	return [
+		...total,
+		...builds.map(build => ({
+			input:'./src/templates/' + build.input,
+			output: [{
+				format: 'esm',
+				file:flavor.destination + build.output
+			}],
+			plugins: [
+				...flavor.plugins,
+				...build.plugins
+			]
+		}))
+	]
+}, [])
+
+export default results

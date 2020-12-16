@@ -9,7 +9,7 @@ let runtime = void 0
 
 let default_options = {}
 
-export function singleHandler(options={}){
+export function singleSaturation(options={}){
   options = { ...default_options, ...options }
   return async function(p, { contents, exports, id }){
     if(!runtime){
@@ -19,12 +19,13 @@ export function singleHandler(options={}){
     if(exports.includes("handler")){
       let source = await compile(contents, {
         entry: `
-          import {handler} from 'component';
-          export default {
+          import {handler,it} from 'component';
+          import { define } from 'wicked-elements';
+          define('.'+it,{
             $(x){ return this.element.querySelector(""+x) },
             $$(x){ return this.element.querySelectorAll(""+x) },
             ...handler
-          };
+          });
         `,
         runtime: runtime,
         plugins: [
