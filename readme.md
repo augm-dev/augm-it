@@ -9,30 +9,27 @@
   <a href="https://npmjs.org/package/augm-it">
     <img src="https://badgen.now.sh/npm/v/augm-it" alt="version" />
   </a>
-  <a href="https://bundlephobia.com/result?p=augm-it">
-    <img src="https://img.badgesize.io/augm-dev/augm-it/master/min.js?compression=brotli" alt="install size" />
-  </a>
 </div>
-
-`augm-it` is a developer tool to write succint, simple, and performant components for the web. Think of it as the "glue" between `uhtml`, `wicked-elements`, `uline`, and `esbuild`.
 
 <h1 align="center">:construction: Under active development. Come back soon! :construction:</h1>
 
 # Features
 
 - Write markup (HTML), styles (CSS), and handler (JS) in a single file (modeled after `svelte`)
-- Extremely lightweight (~1kb saturation runtime, ~3kB rendering runtime)
-- Built on [`uhtml`](https://github.com/WebReflection/uhtml), which is a [fast](https://krausest.github.io/js-framework-benchmark/current.html) tagged-template alternative to virtual-dom (VDOM) architectures (`vue`,`react`,`preact`, etc...)
+- Extremely lightweight (~1kB saturation runtime, ~3kB rendering runtime)
+- Built on [`uhtml`](https://github.com/WebReflection/uhtml), which is a [fast](https://krausest.github.io/js-framework-benchmark/current.html) tagged-template alternative to virtual-dom architectures (`vue`,`react`,`preact`, etc...)
 - Automatically generates
   - SSR-friendly scripts
     - Optimized saturation script for minimal TTI (time to interactive)
     - Load component render functions on demand
     - Bundled and optimized CSS stylesheet
-  - Standalone components delivery methods (for easy imports from an external script / page)
+  - Standalone components (for easy imports from an external script / page)
     - Automatic saturation of existing elements with matching css query (`class="SpecialButton"`)
     - Importable `(props)=>(HTML Fragment)` standalone component for scripts that handle rendering
 
-## Writing Components
+## Usage
+
+### Writing Components
 
 ```js
 import { html, svg, css, register } from 'augm-it'
