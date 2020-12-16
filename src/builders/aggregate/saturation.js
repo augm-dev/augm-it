@@ -1,8 +1,5 @@
 var { readFile, writeFile, rollup, bytesize, parseObject } = require('../../utils')
 var path = require('path')
-const rollupStream = require('@rollup/stream');
-const virtual = require('@rollup/plugin-virtual');
-import { nodeResolve } from '@rollup/plugin-node-resolve';
 const { minify } = require('terser')
 
 let runtime_template

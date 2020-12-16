@@ -1,5 +1,3 @@
-const virtual = require('@rollup/plugin-virtual');
-const rollupStream = require('@rollup/stream');
 var { skypin } = require('rollup-plugin-skypin');
 const { pathDepth, rollup, readFile, compile, component_render_import } = require('../../utils');
 var path = require('path')
