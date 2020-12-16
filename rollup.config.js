@@ -1,35 +1,68 @@
 import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
+import { skypin } from 'rollup-plugin-skypin'
 import pkg from './package.json';
+import path from 'path'
 
-export default {
-	input: 'src/index.js',
-	output: [{
-		format: 'esm',
-		file: pkg.module,
-		sourcemap: false,
-	}, {
-		format: 'cjs',
-		file: pkg.main,
-		sourcemap: false,
-	}, {
-		name: pkg['umd:name'] || pkg.name,
-		format: 'umd',
-		file: pkg.unpkg,
-		sourcemap: false,
-		plugins: [
-			terser()
-		]
-	}, {
-		name: pkg['umd:name'] || pkg.name,
-		format: 'umd',
-		file: "min.js",
-		sourcemap: false,
-		plugins: [
-			terser()
-		]
-	}],
-	plugins: [
-		resolve()
+let flavors = [
+	{
+		destination: './src/runtimes/',
+		plugins: [resolve()]
+	},
+	{
+		destination: './src/runtimes/skypin/',
+		plugins: [skypin()]
+	}
+]
+
+let builds = [
+	{
+		input: 'saturation.js',
+		output: 'saturation.js',
+		plugins: []
+	},
+	{
+		input: 'saturation.js',
+		output: 'saturation.min.js',
+		plugins: [terser()]
+	},
+	{
+		input: 'standalone.js',
+		output: 'standalone.js',
+		plugins: []
+	},
+	{
+		input: 'standalone.js',
+		output: 'standalone.min.js',
+		plugins: [terser()]
+	},
+	{
+		input: 'runtime.js',
+		output: 'runtime.js',
+		plugins: []
+	},
+	{
+		input: 'runtime.js',
+		output: 'runtime.min.js',
+		plugins: [terser()]
+	}
+]
+
+let results = flavors.reduce((total, flavor) => {
+	return [
+		...total,
+		...builds.map(build => ({
+			input:'./src/templates/' + build.input,
+			output: [{
+				format: 'esm',
+				file:flavor.destination + build.output
+			}],
+			plugins: [
+				...flavor.plugins,
+				...build.plugins
+			]
+		}))
 	]
-}
+}, [])
+
+export default results
