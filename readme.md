@@ -14,6 +14,8 @@
   </a>
 </div>
 
+`augm-it` is a developer tool to write succint, simple, and performant components for the web. Think of it as the "glue" between `uhtml`, `wicked-elements`, `uline`, and `esbuild`.
+
 <h1 align="center">:construction: Under active development. Come back soon! :construction:</h1>
 
 # Features
@@ -30,11 +32,7 @@
     - Automatic saturation of existing elements with matching css query (`class="SpecialButton"`)
     - Importable `(props)=>(HTML Fragment)` standalone component for scripts that handle rendering
 
-# About
-
-`augm-it` is a developer tool to write succint, simple, and performant components for the web. Think of it as the "glue" between `uhtml`, `wicked-elements`, `uline`, and `esbuild`.
-
-## Usage
+## Writing Components
 
 ```js
 import { html, svg, css, register } from 'augm-it'
@@ -45,10 +43,12 @@ export let it = register('Example')
 // handler to be attached to elements with class=${it}
 export let handler={
   init(){
-    console.log("Initialized")
+    // select greeting element
+    this.greeting = this.$('.'+it.greeting)
   }
   onClick(){
-    console.log("Clicked!")
+    // toggle 'active' class
+    this.greeting.classList.toggle('active')
   }
 }
 
@@ -72,9 +72,22 @@ export let style = () => css`
     font-size: 2rem;
     color: #412;
   }
+  .${it.greeting}.active{
+    color: #179;
+  }
 `
 
 ```
+
+## Getting Started
+
+- Get VSCode Extensions for syntax highlighting [TODO]
+- Clone example repo [TODO]
+- Follow tutorial [TODO]
+
+## How it Works
+
+TODO
 
 ## Acknowledgements
 
