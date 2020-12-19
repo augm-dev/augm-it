@@ -37,15 +37,23 @@ module.exports = class Builder{
   createBuilders(){
     this.singleBuilder = parallelBuilders.call(printer,function(p, { id, exports }){
       let name = id.replace('.js','')
-      return {
-        [name+'/style.css']: singleStyle(),
-        [name+'/node.js']: singleNode(),
-        [name+'/render.js']: singleRender(),
-        [name+'/handler.js']: singleHandler(),
-        [name+'/standalone.js']: singleStandalone({ minify: true }),
-        [name+'/saturation.js']: singleSaturation({ minify: true }),
-        // [name+'/saturate.js']: singleSaturation(),
-        // [name+'/standalone.js']: singleStandalone()
+      if(exports.includes('default')){
+        if((exports.includes('style') || exports.includes('handler')) && !exports.includes('it')){
+          printer.warn(p + ': `it` not exported with handler/style')
+        }
+        return {
+          [name+'/style.css']: singleStyle(),
+          [name+'/node.js']: singleNode(),
+          [name+'/render.js']: singleRender(),
+          [name+'/handler.js']: singleHandler(),
+          [name+'/standalone.js']: singleStandalone({ minify: true }),
+          [name+'/saturation.js']: singleSaturation({ minify: true }),
+          // [name+'/saturate.js']: singleSaturation(),
+          // [name+'/standalone.js']: singleStandalone()
+        }
+      } else {
+        printer.warn(p + ': No default export - skipping build')
+        return {}
       }
     })
     

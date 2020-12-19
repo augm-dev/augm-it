@@ -96,6 +96,13 @@ export const component_render_import = (id) => ({
         }
         dependency = dependency + '/render.js'
       }
+
+      // we need to add one layer of depth since it's placed inside of a folder
+      if(dependency.startsWith('./')){
+        dependency = '.'+dependency
+      } else if(dependency.startsWith('../')){
+        dependency = '../'+dependency
+      }
       return {
         id: dependency,
         external: true

@@ -15,8 +15,12 @@ export function singleStyle(options={}){
     try{
       let m = require(path.join(process.cwd(),p))
       if(m && m.style){
-        let style = m.style().toString()
-        data = options.minify ? csso.minify(style).css : style
+        if(typeof m.style === 'function'){
+          let style = m.style().toString()
+          data = options.minify ? csso.minify(style).css : style
+        } else {
+          printer.warn(p + ': style must be exported as a function')
+        }
       }
     } catch(e){
       printer.error('Error generating styles', e)

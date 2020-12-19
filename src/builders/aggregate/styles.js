@@ -17,7 +17,9 @@ export function aggregateStyles(options={}){
       Object.keys(targets).forEach(p => {
         let m = require(path.join(process.cwd(),p))
         if(m && m.style){
-          styles += m.style().toString() || ""
+          if(typeof m.style === 'function'){
+            styles += m.style().toString() || ""
+          }
         }
       })
       data = options.minify ? csso.minify(styles).css : styles

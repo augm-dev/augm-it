@@ -1,4 +1,4 @@
-import { defineAsync } from 'https://cdn.skypack.dev/pin/wicked-elements@v3.1.1-3WdNCf0JTLfWoHQZJnW2/min/wicked-elements.js';
+import { defineAsync } from 'https://cdn.skypack.dev/pin/wicked-elements@v3.1.1-uGRgqmJMYsNhHwC9r0Xi/min/wicked-elements.js';
 
 let definitions = __handlers__;
 
