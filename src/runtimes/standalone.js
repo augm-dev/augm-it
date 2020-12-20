@@ -831,4 +831,4 @@ const it_prox = (name) => new Proxy({}, {
 });
 const mangle=(n)=>it_prox(n+'-'+uid(7));
 
-export { liveCSS as css, html, raw, mangle as register, svg };
+export { liveCSS as css, html, raw, mangle as register, svg, uid };
