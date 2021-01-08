@@ -20,13 +20,14 @@ export function aggregateSaturation(options={}){
 }
 
 function generateHandlers(targets){
-  let handlers = {}
+  let all_handlers = {}
   Object.keys(targets).forEach(p => {
-    let { handler, it} = require(path.join(process.cwd(),p))
-    it=`${it}`
-    if(handler && it){
-      handlers[it] = '.' + targets[p].id.replace('.js','/handler.js');
+    let { handlers } = require(path.join(process.cwd(),p))
+    if(handlers && typeof handlers === 'object'){
+      Object.keys(handlers).forEach(k => {
+        all_handlers[k] = '.' + targets[p].id.replace('.js', '/handlers.js');
+      })
     }
   })
-  return parseObject(handlers)
+  return parseObject(all_handlers)
 }

@@ -812,7 +812,8 @@ function plain(t) {
   for (var s = t[0], i = 1, l = arguments.length; i < l; i++)
     s += arguments[i] + t[i];
   return s;
-}const css=plain.bind(null);
+}const uid$1 = (n=11)=>'_'+uid(n-1);
+const css=plain.bind(null);
 const raw=plain.bind(null);
 const liveCSS = function(){
   let styles = plain.apply(null,arguments);
@@ -820,15 +821,15 @@ const liveCSS = function(){
     const styleTag = document.createElement('style');
     styleTag.type = 'text/css';
     styleTag.appendChild(document.createTextNode(styles));
-    document.head.appendChild(styleTag);
+    return document.head.appendChild(styleTag)
   }
 };
-const it_prox = (name) => new Proxy({}, {
+const classify = (n) => new Proxy({}, {
   get(_,prop){
-    if(prop===Symbol.toPrimitive || prop === 'toString'){ return ()=>name }
-    return name+'__'+prop
+    if(prop===Symbol.toPrimitive || prop === 'toString'){ return ()=>n }
+    return n+'__'+prop
   }
 });
-const mangle=(n)=>it_prox(n+'-'+uid(7));
+const mangle=(n)=>classify(n+'-'+uid(7));
 
-export { liveCSS as css, html, raw, mangle as register, svg, uid };
+export { mangle as classify, liveCSS as css, html, raw, svg, uid$1 as uid };

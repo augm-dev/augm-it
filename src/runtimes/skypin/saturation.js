@@ -4,6 +4,6 @@ let definitions = __handlers__;
 
 Object.keys(definitions).forEach(it =>
   defineAsync(`.${it},${it},[is="${it}"]`, () => 
-    import(definitions[it])
+    import(definitions[it]).then(obj => ({ default: obj.default[it] }))
   )
 );

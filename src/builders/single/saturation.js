@@ -14,16 +14,17 @@ export function singleSaturation(options={}){
       runtime = await readFile(path.join(__dirname, '../../runtimes/skypin/runtime.js'), 'utf8')
     }
     let code = void 0
-    if(exports.includes("handler")){
+    if(exports.includes("handlers")){
       let source = await compile(contents, {
         entry: `
-          import {handler,it} from 'component';
-          import { define } from 'wicked-elements';
-          define('.'+it,{
-            $(x){ return this.element.querySelector(""+x) },
-            $$(x){ return this.element.querySelectorAll(""+x) },
-            ...handler
-          });
+          import {handlers} from 'component';
+          Object.keys(handlers).forEach(k => {
+            define('.'+k, {
+              $(x){ return this.element.querySelector(""+x) },
+              $$(x){ return this.element.querySelectorAll(""+x) },
+              ...handlers[key]
+            })
+          })
         `,
         runtime: runtime,
         plugins: [

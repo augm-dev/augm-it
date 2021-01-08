@@ -20,9 +20,11 @@ export function singleStandalone(options={}){
       entry: `
         ${importStatement}
         import { html } from 'augm-it';
-        ${ exports.includes('handler') && exports.includes('it') ? `
+        ${ exports.includes('handlers') ? `
           import { define } from 'wicked-elements';
-          define('.'+it, handler);
+          Object.keys(handlers).forEach(k =>
+            define('.'+k+','+k+',[is="'+k+'"]',handlers[k])
+          )
         `:''}
         ${ exports.includes('style') ? `
           style()

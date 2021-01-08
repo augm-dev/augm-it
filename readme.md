@@ -29,47 +29,87 @@
 
 ## Usage
 
+### CLI
+
+TODO
+
+### Scripts to import
+
+TODO
+
 ### Writing Components
 
+Components are functions that return HTML snippets. On the server, these snippets are strings. On the browser, they're specialized HTML fragments powered by [uhtml](https://github.com/WebReflection/uhtml).
+
+Here's a very simple example:
+
+**`Greeting.js`**
 ```js
-import { html, svg, css, register } from 'augm-it'
+import { html } from 'augm-it'
 
-// unique class id to connect the handler, styles, and render function
-export let it = register('Example')
+export default (name) => html`
+  <h1>Hello, ${name}</h1>
+`
+```
 
-// handler to be attached to elements with class=${it}
-export let handler={
-  init(){
-    // select greeting element
-    this.greeting = this.$('.'+it.greeting)
-  }
-  onClick(){
-    // toggle 'active' class
-    this.greeting.classList.toggle('active')
-  }
-}
+**`test.js`**
+```js
+import Greeting from './Greeting'
+
+Greeting("Marshall")
+// ~> <h1>Hello, Marshall</h1>
+```
+
+To add styles and make our components interactive, we'll need to use the `style` and `handlers` exports.
+- `style` a function that returns a CSS snippet that will style that component
+- `handlers` an object with keys that correspond to class names and values that correspond to custom-element handlers for HTML nodes with that class
+
+You can think of `handlers` and `style` as generic definitions that apply to *all* instances of the component. If we have 29 greetings on one page, there will only be one invocation of `style` and `handlers`, while the default render function will be called 29 times.
+
+To create readable and portable class names that won't suffer from name-clashing, we'll use the `classify` function to connect the render, styles, and handlers.
+
+```js
+import { html, svg, css, classify } from 'augm-it'
+
+// `classify` generates a proxy that outputs class names that avoid name-clashing
+let Example = classify('Example')
 
 // on server, returns string. on browser, returns HTML fragment
 export default ({ name }) =>html`
-  <div class=${it}>
-    <span class=${it.greeting}>
+  <div class=${Example}>
+    <span class=${Example.greeting}>
       Hello ${name}
     </span>
   </div>
 `
 
+// custom-element-like handlers to be attached to elements with corresponding classes
+export let handlers={
+  [Example]: {
+    init(){
+      console.log("Example is live!")
+    }
+  },
+  [Example.greeting]: {
+    onClick(){
+      console.log("The greeting was clicked!")
+      this.element.classList.toggle('active')
+    }
+  }
+}
+
 // added to aggregate stylesheet for SSR
 export let style = () => css`
-  .${it}{
+  .${Example}{
     border: 1px dashed #c89;
     padding: 1rem;
     text-align: center;
   }
-  .${it.greeting}{
+  .${Example.greeting}{
     font-size: 2rem;
     color: #412;
   }
-  .${it.greeting}.active{
+  .${Example.greeting}.active{
     color: #179;
   }
 `
@@ -78,9 +118,9 @@ export let style = () => css`
 
 ## Getting Started
 
-- Get VSCode Extensions for syntax highlighting [TODO]
-- Clone example repo [TODO]
-- Follow tutorial [TODO]
+- Get VSCode Extensions for syntax highlighting:
+  - [`literally-html`](https://marketplace.visualstudio.com/items?itemName=webreflection.literally-html): Syntax highlighting for html inside of JS tagged template strings
+  - [`vscode-styled-componets`](https://marketplace.visualstudio.com/items?itemName=jpoissonnier.vscode-styled-components): Offers CSS syntax highlighting and code completion inside css tagged template strings
 
 ## How it Works
 

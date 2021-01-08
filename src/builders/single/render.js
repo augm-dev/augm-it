@@ -15,9 +15,10 @@ export function singleRender(options={}){
     }
     let code = void 0
     if(exports.includes("default")){
+      let cleaned_exports = exports.filter(e => e !== 'style' && e !== 'handlers')
       let source = await compile(contents, {
         entry: `
-          export { default } from 'component'
+          export { ${cleaned_exports.join(',')} } from 'component'
         `,
         runtime: runtime,
         plugins: [

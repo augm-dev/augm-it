@@ -20,11 +20,13 @@ export function singleNode(options={}){
     }
     let code = void 0
     if(exports.includes("default")){
+      let cleaned_exports = exports.filter(e => e !== 'style' && e !== 'handlers' && e !== 'default')
       let source = await compile(contents, {
         entry: `
           import { default as it } from 'component'
           import { html } from 'augm-it'
           export default html.node\`\${it}\`
+          export { ${cleaned_exports.join(',')} } from 'component'
         `,
         runtime: runtime,
         plugins: [

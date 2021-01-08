@@ -7,22 +7,25 @@ let runtime = void 0
 
 let default_options = {}
 
-export function singleHandler(options={}){
+export function singleHandlers(options={}){
   options = { ...default_options, ...options }
   return async function(p, { contents, exports, id }){
     if(!runtime){
       runtime = await readFile(path.join(__dirname, '../../runtimes/skypin/runtime.js'), 'utf8')
     }
     let code = void 0
-    if(exports.includes("handler")){
+    if(exports.includes("handlers")){
       let source = await compile(contents, {
         entry: `
-          import {handler} from 'component';
-          export default {
-            $(x){ return this.element.querySelector(""+x) },
-            $$(x){ return this.element.querySelectorAll(""+x) },
-            ...handler
-          };
+          import {handlers} from 'component';
+          export default Object.keys(handlers).reduce((agg, key) => ({
+            ...agg,
+            [key]: {
+              $(x){ return this.element.querySelector(""+x) },
+              $$(x){ return this.element.querySelectorAll(""+x) },
+              ...handlers[key]
+            }
+          }),{})
         `,
         runtime: runtime,
         plugins: [

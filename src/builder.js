@@ -4,7 +4,7 @@ var jeye = require('jeye')
 const { writeFile, readFile, bytesize, brotli, parallelBuilders } = require('./utils')
 var kleur = require('kleur')
 const { bold, dim, green, cyan, blue, underline, yellow } = kleur
-const { aggregateSaturation, aggregateStyles, singleNode, singleRender, singleStyle, singleHandler, singleStandalone, singleSaturation } = require('./builders/index.js')
+const { aggregateSaturation, aggregateStyles, singleNode, singleRender, singleStyle, singleHandlers, singleStandalone, singleSaturation } = require('./builders/index.js')
 const {printer} = require('./printer.js');
 
 
@@ -38,14 +38,11 @@ module.exports = class Builder{
     this.singleBuilder = parallelBuilders.call(printer,function(p, { id, exports }){
       let name = id.replace('.js','')
       if(exports.includes('default')){
-        if((exports.includes('style') || exports.includes('handler')) && !exports.includes('it')){
-          printer.warn(p + ': `it` not exported with handler/style')
-        }
         return {
           [name+'/style.css']: singleStyle(),
           [name+'/node.js']: singleNode(),
           [name+'/render.js']: singleRender(),
-          [name+'/handler.js']: singleHandler(),
+          [name+'/handlers.js']: singleHandlers(),
           [name+'/standalone.js']: singleStandalone({ minify: true }),
           [name+'/saturation.js']: singleSaturation({ minify: true }),
           // [name+'/saturate.js']: singleSaturation(),

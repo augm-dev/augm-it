@@ -812,14 +812,14 @@ function plain(t) {
   for (var s = t[0], i = 1, l = arguments.length; i < l; i++)
     s += arguments[i] + t[i];
   return s;
-}const css=plain.bind(null);
+}const uid$1 = (n=11)=>'_'+uid(n-1);
+const css=plain.bind(null);
 const raw=plain.bind(null);
-const it_prox = (name) => new Proxy({}, {
+const classify = (n) => new Proxy({}, {
   get(_,prop){
-    if(prop===Symbol.toPrimitive || prop === 'toString'){ return ()=>name }
-    return name+'__'+prop
+    if(prop===Symbol.toPrimitive || prop === 'toString'){ return ()=>n }
+    return n+'__'+prop
   }
 });
-const register=(n)=>it_prox(n);
 
-export { css, html, raw, register, svg, uid };
+export { classify, css, html, raw, svg, uid$1 as uid };
