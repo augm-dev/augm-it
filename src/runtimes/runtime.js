@@ -788,6 +788,30 @@ const tag = type => {
   );
 };
 
+// each rendered node gets its own cache
+const cache$1 = umap(new WeakMap);
+
+// rendering means understanding what `html` or `svg` tags returned
+// and it relates a specific node to its own unique cache.
+// Each time the content to render changes, the node is cleaned up
+// and the new new content is appended, and if such content is a Hole
+// then it's "unrolled" to resolve all its inner nodes.
+const render = (where, what) => {
+  const hole = typeof what === 'function' ? what() : what;
+  const info = cache$1.get(where) || cache$1.set(where, createCache());
+  const wire = hole instanceof Hole ? unroll(info, hole) : hole;
+  if (wire !== info.wire) {
+    info.wire = wire;
+    where.textContent = '';
+    // valueOf() simply returns the node itself, but in case it was a "wire"
+    // it will eventually re-append all nodes to its fragment so that such
+    // fragment can be re-appended many times in a meaningful way
+    // (wires are basically persistent fragments facades with special behavior)
+    where.appendChild(wire.valueOf());
+  }
+  return where;
+};
+
 const html = tag('html');
 const svg = tag('svg');
 
@@ -822,4 +846,4 @@ const classify = (n) => new Proxy({}, {
   }
 });
 
-export { classify, css, html, raw, svg, uid$1 as uid };
+export { classify, css, html, raw, render, svg, uid$1 as uid };

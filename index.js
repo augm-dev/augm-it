@@ -19,4 +19,6 @@ async function build(source="it",destination="public/it", options){
   return await b.build()
 }
 
-module.exports = {watch, build, html, css, raw, svg, classify, mangle, uid}
+const render = x=>x
+
+module.exports = {watch, build, html, css, raw, svg, classify, mangle, uid, render}
