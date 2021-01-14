@@ -25,10 +25,10 @@
     "test": "npm run build && serve"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "8.1.0",
+    "@rollup/plugin-node-resolve": "^8.1.0",
     "rollup-plugin-terser": "6.1.0",
-    "wicked-elements": "^3.1.1",
-    "uhtml": "^2.1.4"
+    "uhtml": "^2.1.4",
+    "wicked-elements": "^3.1.1"
   },
   "dependencies": {
     "@rollup/plugin-virtual": "^2.0.3",
