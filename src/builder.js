@@ -10,10 +10,18 @@ const {printer} = require('./printer.js');
 
 let jeye_options = { ignore: /(^|[\/\\])[\._]./, cache: require.cache }
 
-let default_options = { strategy: 'all' }
+let default_options = {
+  input: 'it',
+  output: {
+    'public/it': {
+      minified: true,
+      cdn: 'skypack'
+    }
+  }
+}
 
 module.exports = class Builder{
-  constructor(source, destination, options){
+  constructor(options){
     options = { ...default_options, ...options }
     Object.assign(this, { source, destination, options })
     this.single = this.single.bind(this)
@@ -35,31 +43,35 @@ module.exports = class Builder{
   }
 
   createBuilders(){
-    this.singleBuilder = parallelBuilders.call(printer,function(p, { id, exports }){
-      let name = id.replace('.js','')
-      if(exports.includes('default')){
-        return {
-          [name+'/style.css']: singleStyle(),
-          [name+'/node.js']: singleNode(),
-          [name+'/render.js']: singleRender(),
-          [name+'/handlers.js']: singleHandlers(),
-          [name+'/standalone.js']: singleStandalone({ minify: true }),
-          [name+'/saturation.js']: singleSaturation({ minify: true }),
-          // [name+'/saturate.js']: singleSaturation(),
-          // [name+'/standalone.js']: singleStandalone()
-        }
-      } else {
-        printer.warn(p + ': No default export - skipping build')
-        return {}
-      }
-    })
-    
-    this.aggregateBuilder = parallelBuilders.call(printer, function(targets, changed){
+    function createBuild(name,options){
+      let out = (s) => path.join(options.destination, '/'+name'/'+s)
       return {
-        'styles.css': aggregateStyles({ minify: true }),
-        'saturation.js': aggregateSaturation()
+        [out("style.css")]: singleStyle(options),
+        [out("node.js")]: singleNode(options),
+        [out("render.js")]: singleRender(options),
+        [out("handlers.js")]: singleHandlers(options),
+        [out("standalone.js")]: singleStandalone(options),
+        [out("saturation.js")]: singleSaturation(options)
       }
-    })
+    }
+    this.singleBuilder = parallelBuilders(id => 
+      this.options.strategies.reduce((o,k) => ({
+        ...o,
+        ...createBuild(id.replace('.js',''), this.options.strategies[k])
+      }))
+    )
+    this.aggregateBuilder = parallelBuilders(() => ({
+      ...this.options.sheets.reduce((o,k) => ({ ...o,
+        [k]: aggregateStyles(this.options.sheets[k])
+      })),
+      ...this.options.strategies.reduce((o, k) => {
+        let stategy = this.options.strategies[k];
+        return {
+          ...o,
+          [path.join(strategy.destination, '/saturation.js')]: aggregateSaturation(strategy)
+        }
+      })
+    }))
   }
 
   async build(){
@@ -82,11 +94,8 @@ module.exports = class Builder{
   }
 
   async write(output={}){
-    let destination = this.destination
     await Promise.all(
-      Object.keys(output).map(async id => {
-        await writeFile(path.join(destination, id), output[id])
-      })
+      Object.keys(output).map(k => writeFile(k, output[k]))
     )
   }
 

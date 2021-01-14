@@ -16,7 +16,7 @@
 # Features
 
 - Write markup (HTML), styles (CSS), and handler (JS) in a single file (modeled after `svelte`)
-- Extremely lightweight (~1kB saturation runtime, ~3kB rendering runtime)
+- Extremely lightweight
 - Built on [`uhtml`](https://github.com/WebReflection/uhtml), which is a [fast](https://krausest.github.io/js-framework-benchmark/current.html) tagged-template alternative to virtual-dom architectures (`vue`,`react`,`preact`, etc...)
 - Automatically generates
   - SSR-friendly scripts

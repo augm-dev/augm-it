@@ -21,7 +21,7 @@
     "node": ">= 10"
   },
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c builder/rollup.config.js",
     "test": "npm run build && serve"
   },
   "devDependencies": {
@@ -36,12 +36,13 @@
     "brotli-size": "^4.0.0",
     "esm": "^3.2.25",
     "it-helpers": "^1.0.2",
-    "jeye": "^0.7.2",
     "kleur": "^4.1.3",
     "mk-dirs": "^3.0.0",
     "rollup": "2.21.0",
-    "rollup-plugin-skypin": "^1.0.0",
+    "rollup-plugin-cloudport": "0.0.1",
     "sade": "^1.7.4",
-    "uline": "0.0.2"
+    "uline": "0.0.2",
+    "umap": "^1.0.2",
+    "watches": "^0.1.0"
   }
 }
