@@ -19,7 +19,7 @@ const normalize=o=>Object.assign({
 export function saturateAsync(locations){
   for(let k in locations){
     defineAsync('.'+k, () => 
-      import(definitions[k]).then(mod => ({
+      import(locations[k]).then(mod => ({
         default: normalize(mod.handlers[k])
       }))
     )
