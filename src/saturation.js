@@ -16,10 +16,13 @@ const normalize=o=>Object.assign({
  *    "Signature":"./Signature/handlers.js"
  * };
  */
-export function saturateAsync(locations){
+
+// importfn:  x=>import(x)
+
+export function saturateAsync(locations, importfn){
   for(let k in locations){
     defineAsync('.'+k, () => 
-      import(locations[k]).then(mod => ({
+      importfn(locations[k]).then(mod => ({
         default: normalize(mod.handlers[k])
       }))
     )
