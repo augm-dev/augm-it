@@ -27,9 +27,7 @@
       "browser": "./dist/browser.js",
       "require": "./dist/index.js"
     },
-    "./saturation": {
-      "import": "./dist/saturation/index.js"
-    },
+    "./saturation": "./dist/saturation/index.js",
     "./package.json": "./package.json"
   },
   "engines": {
