@@ -40,7 +40,7 @@ export default [{
 	input: 'src/saturation.js',
 	output: [{
 		format: 'esm',
-		file: 'dist/saturation/index.js',
+		file: 'saturation/index.js',
 		sourcemap: false,
 		plugins: [terser()]
 	}],
