@@ -12,6 +12,7 @@
     "email": "hey@m4r.sh",
     "url": "https://m4r.sh"
   },
+  "worker": "dist/index.js",
   "module": "dist/browser.js",
   "main": "dist/index.js",
   "unpkg": "dist/browser.umd.js",
