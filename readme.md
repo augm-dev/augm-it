@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/augm-dev/augm-it/raw/overhaul/meta/augm.png" alt="augm logo" width="80" />
+  <img src="https://github.com/augm-dev/augm-it/raw/main/meta/augm.png" alt="augm logo" width="80" />
 </div>
 
 <h1 align="center">augm-it</h1>

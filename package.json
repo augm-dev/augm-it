@@ -3,7 +3,7 @@
   "name": "augm-it",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/augm-dev/it-helpers.git"
+    "url": "git+https://github.com/augm-dev/augm-it.git"
   },
   "description": "Lightweight & portable component runtime",
   "license": "MIT",
@@ -26,6 +26,7 @@
     ".": {
       "import": "./dist/browser.js",
       "browser": "./dist/browser.js",
+      "worker": "./dist/index.js",
       "require": "./dist/index.js"
     },
     "./saturation": "./saturation/index.js",
