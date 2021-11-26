@@ -24,9 +24,10 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/browser.js",
-      "browser": "./dist/browser.js",
+      "node": "./dist/index.js",
+      "default": "./dist/browser.js",
       "worker": "./dist/index.js",
+      "browser": "./dist/browser.js",
       "require": "./dist/index.js"
     },
     "./saturation": "./saturation/index.js",
